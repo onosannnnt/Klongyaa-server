@@ -8,23 +8,27 @@ import { AtGuard } from './common/guards';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({isGlobal: true}),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       // elephant postgres
-      url: process.env.POSTGRES_URL,
+      host: process.env.POSTGRES_URL,
+      port: 5432,
+      username: 'postgres',
+      password: 'PillboxSecret',
+      database: 'Pillbox',
       autoLoadEntities: true,
       synchronize: true,
     }),
     PillDataModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [],
   providers: [
     {
       provide: APP_GUARD,
       useClass: AtGuard,
-    }
+    },
   ],
 })
 export class AppModule {}

@@ -219,15 +219,16 @@ export class PillDataService implements IPillDataService {
     }
   }
 
-  async deleteRealNameInPillChannelData(req: IAddRealNameToPillCahnnelDataReq): Promise<void> {
+  async deleteRealNameInPillChannelData(
+    req: IAddRealNameToPillCahnnelDataReq,
+  ): Promise<void> {
     try {
-      await this.cidRidRepository.delete({cid: req.cid, rid: req.rid})
+      await this.cidRidRepository.delete({ cid: req.cid, rid: req.rid });
     } catch (error) {
       console.log(error);
       throw new BadRequestException(error);
     }
   }
-
 
   async addLogHistory(req: IAddLogHistoryReq): Promise<void> {
     try {
@@ -236,10 +237,13 @@ export class PillDataService implements IPillDataService {
           where: [{ channelID: req.channelID, lineUID: req.lineUID }],
         });
 
-        if(req.task === TXT_TAKE_PILL) {
-          let total = pillChannelData.total - pillChannelData.pillsPerTime
-          if(total < 0) total = 0;
-          await this.pillChannelDataRepository.update({cid: pillChannelData.cid}, {total})
+        if (req.task === TXT_TAKE_PILL) {
+          let total = pillChannelData.total - pillChannelData.pillsPerTime;
+          if (total < 0) total = 0;
+          await this.pillChannelDataRepository.update(
+            { cid: pillChannelData.cid },
+            { total },
+          );
         }
         const saveLogHistoryData: ISaveLogHistory = {
           pillName: pillChannelData.pillName,
@@ -367,7 +371,7 @@ export class PillDataService implements IPillDataService {
     let firstday: string;
     let lastday: string;
 
-    var curr = new Date();
+    const curr = new Date();
 
     let first: Date;
     let last: Date;
@@ -385,9 +389,8 @@ export class PillDataService implements IPillDataService {
       last = curr;
     } else if (filterBy === TXT_MONTH) {
       first = new Date(year, month, 1, hour, min, sec);
-      last = new Date(year, month, date_amount, hour, min, sec);;
+      last = new Date(year, month, date_amount, hour, min, sec);
     } else {
-      
       first = new Date(year, month - 1, 1, hour, min, sec);
       last = new Date(year, month - 1, date_amount, hour, min, sec);
     }
@@ -452,7 +455,7 @@ export class PillDataService implements IPillDataService {
         const endDay = new Date(lastday).getDate();
 
         for (let i = startDay; i <= endDay; i++) {
-          let counter: number = 0;
+          let counter = 0;
           counter = histories.filter(
             (log) => new Date(log.createdAt).getDate() === i,
           ).length;
@@ -461,7 +464,7 @@ export class PillDataService implements IPillDataService {
       } else if (req.filterBy === TXT_MONTH) {
         countArr = [0, 0, 0, 0];
         histories.map((log) => {
-          let arrIndex = Math.floor(new Date(log.createdAt).getDate() / 7);
+          const arrIndex = Math.floor(new Date(log.createdAt).getDate() / 7);
           countArr[arrIndex] = countArr[arrIndex] + 1;
         });
       }

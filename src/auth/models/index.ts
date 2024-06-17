@@ -1,2 +1,2 @@
-export * from './auth.entity'
-export * from './auth.entity.interfaces'
+export * from './auth.entity';
+export * from './auth.entity.interfaces';

@@ -1,174 +1,201 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { GetCurrentUserLineUID, Public } from 'src/common/decorators';
-import { AddLogHistoryBodyDto, AddPillChannelDataBodyDto, AddRealNameToPillChannelDataReqDto, GetForgottenRateResDto, GetHardwarePillChannelDatasResDto, GetHistoryReqDto, GetHistoryResDto, GetPillChannelDetailReqDto, GetPillStockDto, GetRealPillNameByKeywordResDto, HomeChannelData, HomeChannelDataResDto, PillChannelDataResDto, PillChannelDetailResDto, RealPillBodyDto, RealPillResDto } from './dto/pill-data.dto';
-import { IAddLogHistoryReq, IAddPillChannelDataReq, IAddRealNameToPillCahnnelDataReq, IRealPillData } from './interfaces/pill-data.service.interfaces';
+import {
+  AddLogHistoryBodyDto,
+  AddPillChannelDataBodyDto,
+  AddRealNameToPillChannelDataReqDto,
+  GetForgottenRateResDto,
+  GetHardwarePillChannelDatasResDto,
+  GetHistoryReqDto,
+  GetHistoryResDto,
+  GetPillChannelDetailReqDto,
+  GetPillStockDto,
+  GetRealPillNameByKeywordResDto,
+  HomeChannelData,
+  HomeChannelDataResDto,
+  PillChannelDataResDto,
+  PillChannelDetailResDto,
+  RealPillBodyDto,
+  RealPillResDto,
+} from './dto/pill-data.dto';
+import {
+  IAddLogHistoryReq,
+  IAddPillChannelDataReq,
+  IAddRealNameToPillCahnnelDataReq,
+  IRealPillData,
+} from './interfaces/pill-data.service.interfaces';
 import { PillDataService } from './pill-data.service';
 
 @Controller('pill-data')
 export class PillDataController {
-    constructor(private pillDataService: PillDataService) {}
+  constructor(private pillDataService: PillDataService) {}
 
-    @Post('addRealPillData')
-    async addRealPillData(
-        @Body() body: RealPillBodyDto,
-        @Body('danger_pills') dangerPills: Array<any>
-    ): Promise<RealPillResDto> {
-        const req: IRealPillData = {
-            dangerPills: dangerPills.map(pill => {
-                return {
-                    pillName: pill['pill_name'],
-                    reason: pill['reason']
-                }
-            }),
-            effect: body.effect,
-            pillName: body.pillName,
-            property: body.property
-        }
+  @Post('addRealPillData')
+  async addRealPillData(
+    @Body() body: RealPillBodyDto,
+    @Body('danger_pills') dangerPills: Array<any>,
+  ): Promise<RealPillResDto> {
+    const req: IRealPillData = {
+      dangerPills: dangerPills.map((pill) => {
+        return {
+          pillName: pill['pill_name'],
+          reason: pill['reason'],
+        };
+      }),
+      effect: body.effect,
+      pillName: body.pillName,
+      property: body.property,
+    };
 
-        const realPillData = await this.pillDataService.addRealPillData(req)
+    const realPillData = await this.pillDataService.addRealPillData(req);
 
-        return new RealPillResDto(realPillData)
-    }
+    return new RealPillResDto(realPillData);
+  }
 
-    @Post('addRealNameToPillChannelData')
-    async addRealNameToPillChannelData(@Body() body: AddRealNameToPillChannelDataReqDto) : Promise<PillChannelDetailResDto> {
-        const req: IAddRealNameToPillCahnnelDataReq = {
-            cid: body.cid,
-            rid: body.rid
-        }
+  @Post('addRealNameToPillChannelData')
+  async addRealNameToPillChannelData(
+    @Body() body: AddRealNameToPillChannelDataReqDto,
+  ): Promise<PillChannelDetailResDto> {
+    const req: IAddRealNameToPillCahnnelDataReq = {
+      cid: body.cid,
+      rid: body.rid,
+    };
 
-        const res = await this.pillDataService.addRealNameToPillChannelData(req)
+    const res = await this.pillDataService.addRealNameToPillChannelData(req);
 
-        return new PillChannelDetailResDto(res)
-    }
+    return new PillChannelDetailResDto(res);
+  }
 
-    @Post('deleteRealNameInPillChannelData')
-    async deleteRealNameInPillChannelData(@Body() body: AddRealNameToPillChannelDataReqDto) : Promise<void> {
-        const req: IAddRealNameToPillCahnnelDataReq = {
-            cid: body.cid,
-            rid: body.rid
-        }
+  @Post('deleteRealNameInPillChannelData')
+  async deleteRealNameInPillChannelData(
+    @Body() body: AddRealNameToPillChannelDataReqDto,
+  ): Promise<void> {
+    const req: IAddRealNameToPillCahnnelDataReq = {
+      cid: body.cid,
+      rid: body.rid,
+    };
 
-        const res = await this.pillDataService.deleteRealNameInPillChannelData(req)
+    const res = await this.pillDataService.deleteRealNameInPillChannelData(req);
 
-        return res
-    }
+    return res;
+  }
 
-    @Get('getHomeChannelData')
-    async getHomeChannelData(@GetCurrentUserLineUID() lineUID: string): Promise<HomeChannelDataResDto> {
-        const res = await this.pillDataService.getHomeChannelData(lineUID)
-        return new HomeChannelDataResDto(res)
-    }
+  @Get('getHomeChannelData')
+  async getHomeChannelData(
+    @GetCurrentUserLineUID() lineUID: string,
+  ): Promise<HomeChannelDataResDto> {
+    const res = await this.pillDataService.getHomeChannelData(lineUID);
+    return new HomeChannelDataResDto(res);
+  }
 
-    @Get('getPillChannelDetail/:channelID')
-    async getPillChannelDetail(
-        @Param('channelID') channelID: string,
-        @GetCurrentUserLineUID() lineUID: string
-        ): Promise<PillChannelDetailResDto> {
-        const req: GetPillChannelDetailReqDto = {
-            channelID,
-            lineUID
-        }
-        const res = await this.pillDataService.getPillChannelDetail(req)
-        return res? new PillChannelDetailResDto(res): null
+  @Get('getPillChannelDetail/:channelID')
+  async getPillChannelDetail(
+    @Param('channelID') channelID: string,
+    @GetCurrentUserLineUID() lineUID: string,
+  ): Promise<PillChannelDetailResDto> {
+    const req: GetPillChannelDetailReqDto = {
+      channelID,
+      lineUID,
+    };
+    const res = await this.pillDataService.getPillChannelDetail(req);
+    return res ? new PillChannelDetailResDto(res) : null;
+  }
 
-    }
+  @Get('getRealPillNameByKeyword/:keyword')
+  async getRealPillNameByKeyword(
+    @Param('keyword') keyword: string,
+  ): Promise<GetRealPillNameByKeywordResDto> {
+    const res = await this.pillDataService.getRealPillNameByKeyword(keyword);
 
-    @Get('getRealPillNameByKeyword/:keyword')
-    async getRealPillNameByKeyword(
-        @Param('keyword') keyword: string,
-    ): Promise<GetRealPillNameByKeywordResDto> {
-        const res = await this.pillDataService.getRealPillNameByKeyword(keyword)
+    return new GetRealPillNameByKeywordResDto(res);
+  }
 
-        return new GetRealPillNameByKeywordResDto(res)
-    }
+  @Get('getHistory/:filterBy')
+  async getHistory(
+    @Param('filterBy') filterBy: string,
+    @GetCurrentUserLineUID() lineUID: string,
+  ): Promise<GetHistoryResDto> {
+    const req: GetHistoryReqDto = {
+      filterBy,
+      lineUID,
+    };
 
-    @Get('getHistory/:filterBy')
-    async getHistory(
-        @Param('filterBy') filterBy: string,
-        @GetCurrentUserLineUID() lineUID: string
-    ): Promise<GetHistoryResDto> {
-        const req: GetHistoryReqDto = {
-            filterBy,
-            lineUID
-        } 
+    const res = await this.pillDataService.getHistory(req);
 
-        const res = await this.pillDataService.getHistory(req)
+    return new GetHistoryResDto(res);
+  }
 
-        return new GetHistoryResDto(res)
-    }
+  @Get('forgottenRate/:filterBy')
+  async getForgottenRate(
+    @Param('filterBy') filterBy: string,
+    @GetCurrentUserLineUID() lineUID: string,
+  ): Promise<GetForgottenRateResDto> {
+    const req: GetHistoryReqDto = {
+      filterBy,
+      lineUID,
+    };
+    const res = await this.pillDataService.getForgottenRate(req);
 
-    @Get('forgottenRate/:filterBy')
-    async getForgottenRate(
-        @Param('filterBy') filterBy: string,
-        @GetCurrentUserLineUID() lineUID: string
-    ): Promise<GetForgottenRateResDto> {
-        const req: GetHistoryReqDto = {
-             filterBy,
-             lineUID
-        }
-        const res = await this.pillDataService.getForgottenRate(req)
+    return new GetForgottenRateResDto(res);
+  }
 
-        return new GetForgottenRateResDto(res)
+  @Get('getPillStock')
+  async getPillStock(
+    @GetCurrentUserLineUID() lineUID: string,
+  ): Promise<GetPillStockDto> {
+    const res = await this.pillDataService.getPillStock(lineUID);
+    return new GetPillStockDto(res);
+  }
 
-    }
+  @Public()
+  @Get('getHardwarePillChannelDatas/:lineUID')
+  async getHardwarePillChannelDatas(
+    @Param('lineUID') lineUID: string,
+  ): Promise<GetHardwarePillChannelDatasResDto> {
+    const res = await this.pillDataService.getHardwarePillChannelDatas(lineUID);
+    return new GetHardwarePillChannelDatasResDto(res);
+  }
 
-    @Get('getPillStock')
-    async getPillStock(@GetCurrentUserLineUID() lineUID: string): Promise<GetPillStockDto> {
-        const res = await this.pillDataService.getPillStock(lineUID)
-        return new GetPillStockDto(res)
-    }
+  @Public()
+  @Post('addPillChannelData')
+  async addPillChannelData(
+    @Body() body: AddPillChannelDataBodyDto,
+  ): Promise<PillChannelDataResDto> {
+    const req: IAddPillChannelDataReq = {
+      channelID: body.channelID,
+      pillName: body.pillName,
+      pillsPerTime: body.pillsPerTime,
+      stock: body.stock,
+      takeTimes: body.takeTimes,
+      total: body.total,
+      lineUID: body.lineID,
+    };
 
-    @Public()
-    @Get('getHardwarePillChannelDatas/:lineUID')
-    async getHardwarePillChannelDatas(@Param('lineUID') lineUID: string): Promise<GetHardwarePillChannelDatasResDto> {
-        const res = await this.pillDataService.getHardwarePillChannelDatas(lineUID)
-        return new GetHardwarePillChannelDatasResDto(res)
-    }
+    const pillChannelData = await this.pillDataService.addPillChannelData(req);
+    return new PillChannelDataResDto(pillChannelData);
+  }
 
-    @Public()
-    @Post('addPillChannelData')
-    async addPillChannelData(
-        @Body() body: AddPillChannelDataBodyDto,
-        
-    ): Promise<PillChannelDataResDto> {
-        const req: IAddPillChannelDataReq = {
-            channelID: body.channelID,
-            pillName: body.pillName,
-            pillsPerTime: body.pillsPerTime,
-            stock: body.stock,
-            takeTimes: body.takeTimes,
-            total: body.total,
-            lineUID: body.lineID,
-        }
+  @Public()
+  @Post('deletePillChannelData')
+  async deletePillChannelData(
+    @Body('channelID') channelID: string,
+    @Body('lineUID') lineUID: string,
+  ): Promise<void> {
+    return await this.pillDataService.deletePillChannelData({
+      channelID,
+      lineUID,
+    });
+  }
 
-        const pillChannelData = await this.pillDataService.addPillChannelData(req)
-        return new PillChannelDataResDto(pillChannelData)
-    }
+  @Public()
+  @Post('addLogHistory')
+  async addLogHistory(@Body() body: AddLogHistoryBodyDto): Promise<void> {
+    const req: IAddLogHistoryReq = {
+      channelID: body.channelID,
+      task: body.task,
+      lineUID: body.lineUID,
+    };
 
-    @Public()
-    @Post('deletePillChannelData')
-    async deletePillChannelData(
-        @Body('channelID') channelID: string,
-        @Body('lineUID') lineUID: string,
-    ): Promise<void> {
-        return await this.pillDataService.deletePillChannelData({
-            channelID,
-            lineUID,
-        })
-    }
-
-    @Public()
-    @Post('addLogHistory')
-    async addLogHistory(
-        @Body() body: AddLogHistoryBodyDto
-        ): Promise<void> {
-        const req: IAddLogHistoryReq = {
-            channelID: body.channelID,
-            task: body.task,
-            lineUID: body.lineUID
-        }
-
-        return await this.pillDataService.addLogHistory(req)
-    }
+    return await this.pillDataService.addLogHistory(req);
+  }
 }
