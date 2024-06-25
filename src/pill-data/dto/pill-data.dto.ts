@@ -13,30 +13,23 @@ import {
 
 export class AddPillChannelDataBodyDto {
   @IsString()
-  @Expose({ name: 'line_uid' })
   lineID: string;
 
   @IsString()
-  @Expose({ name: 'id' })
   channelID: string;
 
   @IsString()
-  @Expose({ name: 'name' })
   pillName: string;
 
   @IsNumber()
-  @Expose({ name: 'pillsPerTime' })
   pillsPerTime: number;
 
   // @IsNumber({allowNaN: true})
-  @Expose({ name: 'totalPills' })
   total?: number;
 
-  @Expose({ name: 'stock' })
   stock?: number;
 
   @IsString({ each: true })
-  @Expose({ name: 'timeToTake' })
   takeTimes: string[];
 }
 
