@@ -167,6 +167,7 @@ export class AddLogHistoryBodyDto {
   @IsString()
   lineUID: string;
 
+  @IsString()
   channelID: string;
 
   @IsString()
