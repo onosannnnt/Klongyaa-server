@@ -165,15 +165,12 @@ export class PillChannelDetailResDto extends PillChannelDataResDto {
 
 export class AddLogHistoryBodyDto {
   @IsString()
-  @Expose({ name: 'line_uid' })
   lineUID: string;
 
   @IsString()
-  @Expose({ name: 'channel_id' })
   channelID: string;
 
   @IsString()
-  @Expose({ name: 'task' })
   task: string;
 }
 
