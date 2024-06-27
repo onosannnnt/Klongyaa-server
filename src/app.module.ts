@@ -11,14 +11,8 @@ import { AtGuard } from './common/guards';
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      // elephant postgres
-      host: process.env.POSTGRES_URL,
-      port: parseInt(process.env.POSTGRES_PORT),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
+      url: process.env.POSTGRES_URL,
       autoLoadEntities: true,
-      synchronize: true,
     }),
     PillDataModule,
     AuthModule,
